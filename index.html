@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEX.TROY Login - Captcha</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Background Particle System -->
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="login-container">
+        <div class="login-header">
+            <h1 id="auth-title">DEX.TROY</h1>
+            <p id="auth-subtitle">Secure Access System</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login">Login</button>
+            <button class="auth-tab" id="tab-register">Register</button>
+        </div>
+
+        <!-- Contenedor de los Inputs (Se esconde cuando salta el Captcha) -->
+        <form id="auth-form">
+            <div id="form-inputs">
+                <div class="input-group" id="group-username">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="El_pepe44">
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="miscocos@gmail.rar" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <div class="input-group" id="group-confirm">
+                    <label for="password-confirm">Confirm Password</label>
+                    <input type="password" id="password-confirm" placeholder="••••••••">
+                </div>
+            </div>
+
+            <!-- Pantalla de Carga Trucha (Intermedia) -->
+            <div id="fake-loading">
+                <div class="loader-spinner"></div>
+                <p>Validating Credentials...</p>
+            </div>
+
+            <!-- Pantalla intermedia de "Verify" (sale antes del juego) -->
+            <div id="captcha-pre-verify">
+                <p class="verify-msg">To continue, please verify you are human.</p>
+                <button type="button" id="start-captcha-btn">VERIFY</button>
+            </div>
+
+            <!-- El Captcha Infernal (Juego) -->
+            <div class="captcha-container" id="captcha-container">
+                <canvas id="game-canvas" width="400" height="500"></canvas>
+                <div id="captcha-success">
+                    <div class="checkmark">✓</div>
+                    <p>Verification Complete</p>
+                </div>
+                <div id="captcha-fail">
+                    <p class="fail-msg">Verificación Fallida</p>
+                    <button type="button" id="retry-captcha-btn">Retry</button>
+                    <button type="button" id="cancel-captcha-btn">Volver al Form</button>
+                </div>
+            </div>
+
+            <button type="submit" id="login-btn">LOGIN</button>
+        </form>
+    </div>
+
+    <!-- Logo -->
+    <a href="https://github.com/RoyBruna" target="_blank" rel="noopener noreferrer" class="watermark-logo">
+        <img src="assets/images/logo.jpg" alt="RoyBruna Github">
+    </a>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
