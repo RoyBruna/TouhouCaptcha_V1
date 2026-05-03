@@ -159,6 +159,13 @@ export class Game {
         this.deathSound.play().then(() => this.deathSound.pause()).catch(e => { });
     }
 
+    setMute(isMuted) {
+        this.isMuted = isMuted;
+        this.bgm.muted = isMuted;
+        this.spellSound.muted = isMuted;
+        this.deathSound.muted = isMuted;
+    }
+
     stop() {
         this.isRunning = false;
         this.bgm.pause();
@@ -298,8 +305,9 @@ export class Game {
         this.ctx.clearRect(0, 0, this.width, this.height);
 
         if (this.spellCardActive) {
-            const alpha = 0.3 + Math.sin(this.frameCount * 0.1) * 0.1;
-            this.ctx.fillStyle = `rgba(50, 0, 0, ${alpha})`;
+            // Pulso lento y oscuro
+            const alpha = 0.5 + Math.sin(this.frameCount * 0.02) * 0.4;
+            this.ctx.fillStyle = `rgba(15, 0, 0, ${alpha})`;
             this.ctx.fillRect(0, 0, this.width, this.height);
         } else {
             const pulse = Math.sin(this.frameCount * 0.05) * 20;

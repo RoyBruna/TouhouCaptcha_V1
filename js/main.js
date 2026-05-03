@@ -31,6 +31,8 @@ const btnCancel = document.getElementById('cancel-captcha-btn');
 const fakeLoading = document.getElementById('fake-loading');
 const preVerifyPanel = document.getElementById('captcha-pre-verify');
 const btnStartCaptcha = document.getElementById('start-captcha-btn');
+const btnMute = document.getElementById('mute-btn');
+const toastContainer = document.getElementById('toast-container');
 
 const tabLogin = document.getElementById('tab-login');
 const tabRegister = document.getElementById('tab-register');
@@ -44,6 +46,25 @@ const authForm = document.getElementById('auth-form');
 let isLoginMode = true;
 let game = null;
 let hasSeenCountdown = false;
+let isMuted = false;
+
+// --- TOAST NOTIFICATIONS ---
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerText = message;
+    
+    toastContainer.appendChild(toast);
+    
+    // Trigger reflow
+    void toast.offsetWidth;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
 
 // --- TRANSICIONES DE LAS TABS DE LOGIN Y REGISTER ---
 function setAuthMode(mode) {
@@ -103,6 +124,7 @@ function triggerFakeLoad() {
 
     if (game) game.stop();
     game = new Game(canvas, onWin, onFail);
+    game.setMute(isMuted);
 
     setTimeout(() => {
         fakeLoading.style.display = 'none';
@@ -139,7 +161,7 @@ function onWin() {
 
     setTimeout(() => {
         const action = isLoginMode ? 'Logged In' : 'Registered';
-        alert(`Access Granted. User successfully ${action}. Welcome to DEX.TROY.`);
+        showToast(`Access Granted. User successfully ${action}. Welcome to DEX.TROY.`, 'success');
         showFormUI();
         authForm.reset();
     }, 1500);
@@ -148,7 +170,22 @@ function onWin() {
 function onFail() {
     canvas.style.display = 'none';
     divFail.style.display = 'block';
+    
+    // Screen shake effect
+    captchaContainer.classList.add('shake');
+    setTimeout(() => {
+        captchaContainer.classList.remove('shake');
+    }, 500);
 }
+
+// --- MUTE BUTTON ---
+btnMute.addEventListener('click', () => {
+    isMuted = !isMuted;
+    document.getElementById('icon-sound-on').style.display = isMuted ? 'none' : 'block';
+    document.getElementById('icon-sound-off').style.display = isMuted ? 'block' : 'none';
+    btnMute.classList.toggle('muted', isMuted);
+    if (game) game.setMute(isMuted);
+});
 
 tabLogin.addEventListener('click', () => { if (formInputs.style.display !== 'none') setAuthMode('login'); });
 tabRegister.addEventListener('click', () => { if (formInputs.style.display !== 'none') setAuthMode('register'); });
@@ -166,7 +203,7 @@ authForm.addEventListener('submit', (e) => {
         const pass2 = document.getElementById('password-confirm').value;
 
         if (pass1 !== pass2) {
-            alert('Las contraseñas no coinciden.');
+            showToast('Las contraseñas no coinciden.', 'error');
             return;
         }
     }
