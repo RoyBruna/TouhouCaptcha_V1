@@ -592,3 +592,75 @@ body {
     0%, 100% { opacity: 0.1; }
     50% { opacity: 0.6; }
 }
+
+.changa-one-regular {
+  font-family: "Changa One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Achievement Popup */
+.achievement-popup {
+    display: flex;
+    align-items: center;
+    background: rgba(15, 10, 15, 0.95);
+    border: 2px solid #d13000;
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(209, 48, 0, 0.6), inset 0 0 10px rgba(209, 48, 0, 0.2);
+    padding: 10px 15px;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    gap: 15px;
+    min-width: 250px;
+    margin-bottom: 5px;
+}
+
+.achievement-popup.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.ach-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 0 5px #d13000);
+}
+
+.ach-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.ach-title {
+    color: #ffaa88;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.ach-subtitle {
+    color: #fff;
+    font-size: 1.4rem;
+    text-shadow: 2px 2px 0px #d13000;
+}
+
+/* Simple Notification (Center Bottom) */
+.simple-notif {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 10, 15, 0.9);
+    border: 1px solid var(--primary-color);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 1s ease;
+    box-shadow: 0 0 15px rgba(209, 48, 0, 0.3);
+    text-align: center;
+    letter-spacing: 1px;
+}

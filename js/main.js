@@ -66,6 +66,47 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
+// --- SIMPLE NOTIFICATION ---
+function showSimpleNotification(message) {
+    const notif = document.createElement('div');
+    notif.className = 'simple-notif';
+    notif.innerText = message;
+    document.body.appendChild(notif);
+    
+    // Trigger reflow for fade in
+    void notif.offsetWidth;
+    notif.style.opacity = '1';
+    
+    setTimeout(() => {
+        notif.style.opacity = '0';
+        setTimeout(() => notif.remove(), 1000);
+    }, 4000);
+}
+
+// --- ACHIEVEMENT POPUP ---
+function showAchievement(title, subtitle) {
+    const ach = document.createElement('div');
+    ach.className = `achievement-popup`;
+    ach.innerHTML = `
+        <div class="ach-icon">⛩️</div>
+        <div class="ach-text">
+            <div class="ach-title">${title}</div>
+            <div class="ach-subtitle changa-one-regular">${subtitle}</div>
+        </div>
+    `;
+    
+    toastContainer.appendChild(ach);
+    
+    // Trigger reflow
+    void ach.offsetWidth;
+    ach.classList.add('show');
+    
+    setTimeout(() => {
+        ach.classList.remove('show');
+        setTimeout(() => ach.remove(), 500);
+    }, 8000);
+}
+
 // --- TRANSICIONES DE LAS TABS DE LOGIN Y REGISTER ---
 function setAuthMode(mode) {
     if (isLoginMode === (mode === 'login')) return;
@@ -159,9 +200,11 @@ function onWin() {
     canvas.style.display = 'none';
     divSuccess.style.display = 'block';
 
+    showAchievement('Logro Desbloqueado', 'Lunatic Captcha');
+
     setTimeout(() => {
         const action = isLoginMode ? 'Logged In' : 'Registered';
-        showToast(`Access Granted. User successfully ${action}. Welcome to DEX.TROY.`, 'success');
+        showSimpleNotification(`Access Granted. User successfully ${action}. Welcome to DEX.TROY.`);
         showFormUI();
         authForm.reset();
     }, 1500);
