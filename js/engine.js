@@ -143,6 +143,13 @@ export class Game {
         this.timeLeft = CONFIG.SURVIVAL_TIME;
         this.frameCount = 0;
         this.spellCardActive = false;
+        this.phase2Active = false;
+        const grid = document.querySelector('.grid-overlay');
+        if(grid) {
+            grid.classList.remove('spellcard');
+            grid.classList.remove('phase2');
+        }
+        
         this.bullets = [];
         this.player.x = this.width / 2;
         this.player.y = this.height - 80;
@@ -214,6 +221,12 @@ export class Game {
             this.spellCardActive = true;
             this.playSpellSound();
             this.boss.y = 120;
+            
+            const grid = document.querySelector('.grid-overlay');
+            if(grid) {
+                grid.classList.remove('phase2');
+                grid.classList.add('spellcard');
+            }
         }
 
         // FASE 1 (0-10s): Cola de fénix. 
@@ -230,6 +243,12 @@ export class Game {
         // FASE 2 (10-15s): Laberinto. El Check-Point de Humanidad.
         // Si sos un bot escaneando, esa pared de balas sin hueco visible te desarma fijo.
         else if (timePassed < 15) {
+            if (!this.phase2Active) {
+                this.phase2Active = true;
+                const grid = document.querySelector('.grid-overlay');
+                if(grid) grid.classList.add('phase2');
+            }
+
             if (this.frameCount % 55 === 0) {
                 const doorWidth = 90; 
                 const doorPos = Math.random() * (this.width - doorWidth - 40) + 20;

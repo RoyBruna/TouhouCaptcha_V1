@@ -551,23 +551,44 @@ body {
   40%, 60% { transform: translate3d(8px, 0, 0); }
 }
 
-/* Grid Overlay */
+/* Grid Overlay (cuadricula) */
 .grid-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: -50%;
+    left: -50%;
+    width: 200%;
     height: 200%;
     background-image: linear-gradient(rgba(209, 48, 0, 0.2) 1px, transparent 1px),
     linear-gradient(90deg, rgba(209, 48, 0, 0.2) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 1;
-    animation: gridScroll 2s linear infinite;
+    animation: gridScroll 4s linear infinite;
+    opacity: 0;
+    transform-origin: center;
+    transition: opacity 1s ease;
+}
+
+.grid-overlay.phase2 {
+    animation: gridScroll 4s linear infinite, gridPulse 1.5s ease-in-out infinite;
+}
+
+.grid-overlay.spellcard {
     opacity: 0.4;
+    animation: gridScroll 4s linear infinite, gridRotate 30s linear infinite;
 }
 
 @keyframes gridScroll {
-    from { transform: translateY(-50%); }
-    to { transform: translateY(0); }
+    from { background-position: 0 0; }
+    to { background-position: 0 40px; }
+}
+
+@keyframes gridRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes gridPulse {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.6; }
 }
