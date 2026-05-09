@@ -29,7 +29,6 @@ export class Game {
         this.bulletPool = new Pool(
             () => new Bullet(),
             (b) => {
-                b.active = true;
                 b.accel = 0;
             },
             CONFIG.BULLET_Pool_SIZE
@@ -100,6 +99,7 @@ export class Game {
     initInput() {
         window.addEventListener('keydown', e => this.keys[e.key.toLowerCase()] = true);
         window.addEventListener('keyup', e => this.keys[e.key.toLowerCase()] = false);
+        window.addEventListener('blur', () => this.keys = {}); // Clear keys on alt+tab
 
         this.touchActive = false;
         this.lastTouchX = 0;

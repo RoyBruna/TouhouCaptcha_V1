@@ -281,26 +281,7 @@ body {
     letter-spacing: 1px;
 }
 
-#start-captcha-btn {
-    background: transparent;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    padding: 12px 30px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-}
-
-#start-captcha-btn:hover {
-    background-color: rgba(209, 48, 0, 0.1);
-    box-shadow: 0 0 10px rgba(209, 48, 0, 0.3);
-}
-
-#retry-captcha-btn,
-#cancel-captcha-btn {
+.btn-outline {
     background: transparent;
     border: 1px solid var(--primary-color);
     color: var(--primary-color);
@@ -315,10 +296,15 @@ body {
     margin: 5px;
 }
 
-#retry-captcha-btn:hover,
-#cancel-captcha-btn:hover {
+.btn-outline:hover {
     background-color: rgba(209, 48, 0, 0.1);
     box-shadow: 0 0 10px rgba(209, 48, 0, 0.3);
+}
+
+#start-captcha-btn {
+    padding: 12px 30px;
+    letter-spacing: 1.5px;
+    font-size: 1rem;
 }
 
 /* Watermark Logo */
