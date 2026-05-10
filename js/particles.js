@@ -6,20 +6,41 @@ export function initParticles() {
     bgCanvas.width = window.innerWidth;
     bgCanvas.height = window.innerHeight;
     particles = [];
-    const numParticles = Math.floor((window.innerWidth * window.innerHeight) / 10000);
+    const numParticles = Math.floor((window.innerWidth * window.innerHeight) / 12000);
 
     for (let i = 0; i < numParticles; i++) {
-        particles.push({
-            x: Math.random() * bgCanvas.width,
-            y: Math.random() * bgCanvas.height,
-            r: Math.random() * 2 + 1,
-            vx: (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.5 - 0.2,
-            color: `rgba(${150 + Math.random() * 105}, ${20 + Math.random() * 30}, 0, ${Math.random() * 0.5 + 0.1})`,
-            angle: Math.random() * Math.PI * 2,
-            spin: (Math.random() - 0.5) * 0.02
-        });
+        const p = createParticle();
+        // Start them at random life stages so they don't all fade in at once
+        p.life = Math.random() * p.maxLife; 
+        particles.push(p);
     }
+}
+
+function createParticle() {
+    return {
+        x: Math.random() * bgCanvas.width,
+        y: Math.random() * bgCanvas.height,
+        maxR: Math.random() * 5 + 3, // radius between 3 and 8
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4 - 0.2,
+        color: `rgba(${150 + Math.random() * 105}, ${20 + Math.random() * 30}, 0, ${Math.random() * 0.3 + 0.1})`,
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.02,
+        life: 0,
+        maxLife: 200 + Math.random() * 400 // Lives for ~3 to 10 seconds
+    };
+}
+
+function drawHexagon(ctx, x, y, r, angle) {
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+        const a = angle + (i * Math.PI / 3);
+        const hx = x + Math.cos(a) * r;
+        const hy = y + Math.sin(a) * r;
+        if (i === 0) ctx.moveTo(hx, hy);
+        else ctx.lineTo(hx, hy);
+    }
+    ctx.closePath();
 }
 
 function drawHUDDecals(ctx, w, h, time) {
@@ -114,20 +135,52 @@ export function animateParticles(time) {
 
     for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
+        p.life++;
+
+        // Respawn if dead
+        if (p.life >= p.maxLife) {
+            particles[i] = createParticle();
+            continue;
+        }
+
         p.angle += p.spin;
         p.x += p.vx + Math.sin(p.angle) * 0.5;
         p.y += p.vy;
 
-        if (p.x < 0) p.x = bgCanvas.width;
-        if (p.x > bgCanvas.width) p.x = 0;
-        if (p.y < 0) p.y = bgCanvas.height;
-        if (p.y > bgCanvas.height) p.y = 0;
+        // Wrap around (just in case they drift too far off screen before dying)
+        if (p.x < -20) p.x = bgCanvas.width + 20;
+        if (p.x > bgCanvas.width + 20) p.x = -20;
+        if (p.y < -20) p.y = bgCanvas.height + 20;
+        if (p.y > bgCanvas.height + 20) p.y = -20;
 
-        bgCtx.beginPath();
-        bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        // Smooth grow and shrink using sine wave (0 to 1 to 0 based on life progress)
+        const progress = p.life / p.maxLife;
+        const currentR = p.maxR * Math.sin(progress * Math.PI);
+
+        // Draw particle
+        drawHexagon(bgCtx, p.x, p.y, currentR, p.angle);
         bgCtx.fillStyle = p.color;
         bgCtx.fill();
+        bgCtx.strokeStyle = p.color;
+        bgCtx.lineWidth = 1;
+        bgCtx.stroke();
     }
+    
+    // Ocasional Glitch Effect (Screen Tearing)
+    // 0.3% chance per frame (approx once every 5-6 seconds)
+    if (Math.random() < 0.003) {
+        const y = Math.random() * bgCanvas.height;
+        const h = Math.random() * 80 + 20;
+        const shiftX = (Math.random() - 0.5) * 40;
+        
+        // Slice the canvas and shift it horizontally to simulate tearing
+        bgCtx.drawImage(bgCanvas, 0, y, bgCanvas.width, h, shiftX, y, bgCanvas.width, h);
+        
+        // Add a subtle color distortion
+        bgCtx.fillStyle = `rgba(209, 48, 0, ${Math.random() * 0.15})`;
+        bgCtx.fillRect(0, y, bgCanvas.width, h);
+    }
+
     requestAnimationFrame(animateParticles);
 }
 
